@@ -1,0 +1,54 @@
+db.reality_shows.insertMany([
+  {
+    "nome": "Casa dos Famosos",
+    "emissora": "SBT",
+    "audiencia_pontos": 14,
+    "participantes": [
+      { "nome": "Alice Moreira", "idade": 27, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Viagem internacional", "valor": 18000 } ] },
+      { "nome": "Bruno Oliveira", "idade": 33, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "R$ 8.000 em dinheiro", "valor": 8000 }, { "descricao": "Assinatura anual de streaming", "valor": 1200 } ] },
+      { "nome": "Carolina Torres", "idade": 24, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Smartwatch premium", "valor": 3500 }, { "descricao": "Vale-spa de luxo", "valor": 2000 }, { "descricao": "Imunidade da semana", "valor": 0 } ] },
+      { "nome": "Diego Campos", "idade": 30, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Moto elétrica", "valor": 21000 } ] },
+      { "nome": "Eduardo Reis", "idade": 28, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Carro esportivo", "valor": 95000 }, { "descricao": "Fim de semana romântico", "valor": 4000 } ] },
+      { "nome": "Fernanda Pires", "idade": 31, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Vale compras de R$ 20.000", "valor": 20000 }, { "descricao": "Home theater 5.1", "valor": 5000 } ] },
+      { "nome": "Gustavo Lima", "idade": 35, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Poder da troca", "valor": 0 }, { "descricao": "Um ano de academia", "valor": 2500 } ] },
+      { "nome": "Helena Duarte", "idade": 26, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Reforma completa da cozinha", "valor": 40000 } ] },
+      { "nome": "Igor Nascimento", "idade": 29, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Vale-viagem nacional", "valor": 7000 }, { "descricao": "Cesta gourmet", "valor": 800 } ] },
+      { "nome": "Júlia Fernandes", "idade": 32, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Kit de vinhos importados", "valor": 2500 }, { "descricao": "Notebook gamer", "valor": 9000 }, { "descricao": "Vale-estadia no nordeste", "valor": 5000 } ] }
+    ]
+  },
+  {
+    "nome": "Ilhados",
+    "emissora": "Globo",
+    "audiencia_pontos": 16,
+    "participantes": [
+      { "nome": "Karina Lopes", "idade": 30, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Barco inflável", "valor": 6000 }, { "descricao": "Curso de mergulho", "valor": 2500 } ] },
+      { "nome": "Lucas Andrade", "idade": 25, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Moto elétrica", "valor": 22000 } ] },
+      { "nome": "Marcela Freitas", "idade": 34, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Um ano de supermercado grátis", "valor": 24000 }, { "descricao": "Kit de beleza", "valor": 1500 } ] },
+      { "nome": "Natan Ribeiro", "idade": 37, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Fim de semana em resort", "valor": 4000 }, { "descricao": "R$ 5.000 em dinheiro", "valor": 5000 } ] },
+      { "nome": "Olívia Martins", "idade": 23, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Reforma do quarto", "valor": 20000 } ] },
+      { "nome": "Paulo César", "idade": 28, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Carro popular 0km", "valor": 75000 }, { "descricao": "Imunidade da semana", "valor": 0 } ] },
+      { "nome": "Queila Souza", "idade": 27, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Smartphone topo de linha", "valor": 8000 } ] },
+      { "nome": "Rafael Dias", "idade": 36, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Cesta de produtos naturais", "valor": 1200 }, { "descricao": "Home theater 4K", "valor": 4800 } ] },
+      { "nome": "Sofia Cardoso", "idade": 24, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Viagem para Cancún", "valor": 17000 } ] },
+      { "nome": "Tiago Menezes", "idade": 40, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Um ano de academia", "valor": 2500 }, { "descricao": "R$ 2.000 em vale-compras", "valor": 2000 } ] }
+    ]
+  },
+  {
+    "nome": "Desafio Gourmet",
+    "emissora": "Band",
+    "audiencia_pontos": 9,
+    "participantes": [
+      { "nome": "Ursula Prado", "idade": 38, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Kit de panelas profissionais", "valor": 6000 }, { "descricao": "Curso de gastronomia", "valor": 4000 } ] },
+      { "nome": "Vinícius Rocha", "idade": 29, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "R$ 15.000 em dinheiro", "valor": 15000 } ] },
+      { "nome": "Wesley Costa", "idade": 33, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Viagem para Paris", "valor": 20000 }, { "descricao": "Um ano de academia", "valor": 2500 } ] },
+      { "nome": "Xavier Monteiro", "idade": 35, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Smartphone de última geração", "valor": 7500 }, { "descricao": "Kit de temperos importados", "valor": 1200 } ] },
+      { "nome": "Yasmin Araújo", "idade": 28, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Carro elétrico", "valor": 98000 } ] },
+      { "nome": "Zeca Martins", "idade": 42, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Reforma completa da casa", "valor": 60000 }, { "descricao": "Poder da escolha", "valor": 0 } ] },
+      { "nome": "Amanda Lopes", "idade": 30, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Moto elétrica", "valor": 21000 } ] },
+      { "nome": "Brenda Assis", "idade": 27, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Home theater", "valor": 4500 }, { "descricao": "Fim de semana em resort", "valor": 3500 } ] },
+      { "nome": "César Augusto", "idade": 34, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Vale-compras de supermercado", "valor": 24000 } ] },
+      { "nome": "Daniela Pinto", "idade": 39, "total_votos": 0, "eliminado": false, "premios_ganhos": [ { "descricao": "Bicicleta elétrica", "valor": 7000 }, { "descricao": "Imunidade da semana", "valor": 0 } ] }
+    ]
+  }
+])
+

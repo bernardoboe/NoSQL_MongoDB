@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votação e Acompanhamento - Reality Show</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            display: flex; 
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px; 
+            padding: 20px; 
+            background-color: #f0f2f5;
+            flex-wrap: wrap;
+        }
+        .panel { 
+            border: 1px solid #ddd; 
+            padding: 25px; 
+            border-radius: 8px; 
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-width: 400px;
+            flex-grow: 1;
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        select, button, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button.secondary {
+             background-color: #6c757d;
+        }
+        button.secondary:hover {
+            background-color: #5a6268;
+        }
+        #chart-container { 
+            width: 100%; 
+            max-width: 600px; 
+            height: 400px; 
+            margin-top: 20px;
+        }
+        #vote-status {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .api-query {
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #2d2d2d;
+            color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 10px;
+            display: none; 
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <h2>Votação</h2>
+        <form id="vote-form">
+            <label for="reality-select">Escolha o Reality Show:</label><br>
+            <select id="reality-select" name="reality">
+                <option>Carregando...</option>
+            </select>
+            <br><br>
+            <label for="participant-select">Escolha o Participante:</label><br>
+            <select id="participant-select" name="participant">
+            </select>
+            <br><br>
+            <button type="submit">Votar</button>
+        </form>
+        <p id="vote-status"></p>
+    </div>
+
+    <div class="panel">
+        <h2>Acompanhamento de Votos</h2>
+        <div id="chart-container">
+            <canvas id="votesChart"></canvas>
+        </div>
+    </div>
+
+    <div class="panel" style="max-width: 600px;">
+        <h2>Consultas da API</h2>
+
+        <div class="api-query">
+            <button id="btn-premios" class="secondary">Ver Lista de Prêmios</button>
+            <pre id="result-premios"></pre>
+        </div>
+
+        <div class="api-query">
+            <button id="btn-audiencia" class="secondary">Ver Audiência por Emissora</button>
+            <pre id="result-audiencia"></pre>
+        </div>
+        
+        <div class="api-query">
+            <button id="btn-total" class="secondary">Ver Total de Prêmios por Reality</button>
+            <pre id="result-total"></pre>
+        </div>
+        
+        <div class="api-query">
+            <button id="btn-idade" class="secondary">Ver Mais Novo/Velho (do reality selecionado)</button>
+            <pre id="result-idade"></pre>
+        </div>
+
+        <div class="api-query">
+             <label for="input-valor">Buscar Prêmios Acima de:</label><br>
+             <input type="number" id="input-valor" placeholder="Ex: 20000" value="20000">
+            <button id="btn-maior" class="secondary">Buscar</button>
+            <pre id="result-maior"></pre>
+        </div>
+    </div>
+
+
+    <script>
+        const API_URL = 'http://localhost:3000';
+        const realitySelect = document.getElementById('reality-select');
+        const participantSelect = document.getElementById('participant-select');
+        const voteForm = document.getElementById('vote-form');
+        const voteStatus = document.getElementById('vote-status');
+        const chartCanvas = document.getElementById('votesChart');
+        
+        let votesChart;
+        let realityShowsData = {}; 
+
+        async function initializePage() {
+            try {
+                const response = await fetch(`${API_URL}/premios`);
+                if (!response.ok) throw new Error('Falha ao buscar dados da API. O servidor está a correr?');
+                
+                const dataFromApi = await response.json();
+
+                dataFromApi.forEach(reality => {
+                    const realityName = reality.nome_reality;
+                    const participantNames = reality.participantes.map(p => p.nome_participante);
+                    realityShowsData[realityName] = participantNames;
+                });
+
+                populateRealitySelect();
+                populateParticipants();
+
+            } catch (error) {
+                console.error("Erro ao inicializar a página:", error);
+                realitySelect.innerHTML = `<option>Erro ao carregar</option>`;
+                alert(error.message);
+            }
+        }
+
+        function populateRealitySelect() {
+            realitySelect.innerHTML = ''; 
+            for (const realityName in realityShowsData) {
+                const option = document.createElement('option');
+                option.value = realityName;
+                option.textContent = realityName;
+                realitySelect.appendChild(option);
+            }
+        }
+
+        function populateParticipants() {
+            const selectedReality = realitySelect.value;
+            participantSelect.innerHTML = '';
+            
+            if (realityShowsData[selectedReality]) {
+                realityShowsData[selectedReality].forEach(participantName => {
+                    const option = document.createElement('option');
+                    option.value = participantName;
+                    option.textContent = participantName;
+                    participantSelect.appendChild(option);
+                });
+            }
+            updateChart();
+        }
+
+        async function updateChart() {
+            const realityName = realitySelect.value;
+            if (!realityName) return;
+
+            try {
+                const response = await fetch(`${API_URL}/votos/${realityName}`);
+                const data = await response.json();
+
+                const labels = data.map(p => p.nome);
+                const votes = data.map(p => p.total_votos);
+
+                if (votesChart) {
+                    votesChart.destroy();
+                }
+
+                votesChart = new Chart(chartCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Total de Votos',
+                            data: votes,
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: { 
+                            y: { 
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0,
+                                    stepSize: 1
+                                }
+                            } 
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            } catch(error) {
+                console.error('Erro ao atualizar o gráfico:', error);
+            }
+        }
+
+        
+        async function fetchAndDisplay(endpoint, resultElement) {
+            resultElement.textContent = 'Carregando...';
+            try {
+                const response = await fetch(`${API_URL}${endpoint}`);
+                if (!response.ok) {
+                    throw new Error(`Erro ${response.status}: ${await response.text()}`);
+                }
+                const data = await response.json();
+                resultElement.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultElement.textContent = `Erro: ${error.message}`;
+                console.error(`Erro ao buscar ${endpoint}:`, error);
+            }
+        }
+
+        function setupApiButton(buttonId, resultId, endpointProvider) {
+            const button = document.getElementById(buttonId);
+            const resultElement = document.getElementById(resultId);
+            const allResultElements = document.querySelectorAll('.api-query pre');
+
+            button.addEventListener('click', () => {
+                const isVisible = resultElement.style.display === 'block';
+
+                allResultElements.forEach(el => {
+                    if (el.id !== resultId) {
+                        el.style.display = 'none';
+                    }
+                });
+
+                if (isVisible) {
+                    resultElement.style.display = 'none';
+                } else {
+                    resultElement.style.display = 'block';
+                    const endpoint = endpointProvider();
+                    if(endpoint) {
+                        fetchAndDisplay(endpoint, resultElement);
+                    } else {
+                        resultElement.textContent = 'Por favor, complete os campos necessários.';
+                    }
+                }
+            });
+        }
+
+        setupApiButton('btn-premios', 'result-premios', () => '/premios');
+        setupApiButton('btn-audiencia', 'result-audiencia', () => '/audiencia');
+        setupApiButton('btn-total', 'result-total', () => '/total');
+        setupApiButton('btn-idade', 'result-idade', () => {
+            const selectedReality = realitySelect.value;
+            return selectedReality ? `/idade/${selectedReality}` : null;
+        });
+        setupApiButton('btn-maior', 'result-maior', () => {
+            const valor = document.getElementById('input-valor').value;
+            return valor ? `/maior/${valor}` : null;
+        });
+
+
+        realitySelect.addEventListener('change', populateParticipants);
+
+        voteForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const reality = realitySelect.value;
+            const participant = participantSelect.value;
+            voteStatus.textContent = 'A enviar voto...';
+
+            try {
+                const response = await fetch(`${API_URL}/votar/${reality}/${participant}`, {
+                    method: 'PUT'
+                });
+                if (!response.ok) throw new Error('Falha na resposta do servidor.');
+
+                const result = await response.json();
+                voteStatus.textContent = result.message;
+                setTimeout(() => updateChart(), 500); 
+            } catch (err) {
+                voteStatus.textContent = 'Erro ao votar.';
+                console.error(err);
+            }
+        });
+
+        initializePage();
+
+    </script>
+</body>
+</html>
+

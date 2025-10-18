@@ -1,0 +1,50 @@
+db.createCollection("reality_shows", {
+  validator: {
+    $jsonSchema: {
+      "bsonType": "object",
+      "title": "Validação de Documento de Reality Show",
+      "required": ["nome", "emissora", "audiencia_pontos", "participantes"],
+      "properties": {
+        "nome": {
+          "bsonType": "string",
+          "description": "O nome do reality show é obrigatório."
+        },
+        "emissora": {
+          "bsonType": "string",
+          "description": "A emissora é obrigatória."
+        },
+        "audiencia_pontos": {
+          "bsonType": "int",
+          "minimum": 0,
+          "description": "A audiência deve ser um inteiro não negativo."
+        },
+        "participantes": {
+          "bsonType": "array",
+          "description": "Deve ser um array de participantes.",
+          "minItems": 1,
+          "items": {
+            "bsonType": "object",
+            "required": ["nome", "idade", "total_votos", "eliminado"],
+            "properties": {
+              "nome": { "bsonType": "string" },
+              "idade": { "bsonType": "int", "minimum": 18 },
+              "total_votos": { "bsonType": "int", "minimum": 0 },
+              "eliminado": { "bsonType": "bool" },
+              "premios_ganhos": {
+                "bsonType": "array",
+                "items": {
+                  "bsonType": "object",
+                  "required": ["descricao", "valor"],
+                  "properties": {
+                    "descricao": { "bsonType": "string" },
+                    "valor": { "bsonType": "number" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+})
